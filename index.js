@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const User = require('./user-schema.js');
 const userRouter = require('./routes/user.js');
-const storyRouter = require('./routes/story.js');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 mongoose.Promise = global.Promise;
 
