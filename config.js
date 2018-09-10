@@ -10,4 +10,4 @@ module.exports = {
         'mongodb://localhost/thinkful-backend-test',
   JWT_SECRET: 'miko',
   JWT_EXPIRY: '7d'
-};
+}; 
