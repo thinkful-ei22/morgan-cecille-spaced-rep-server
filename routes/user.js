@@ -1,7 +1,7 @@
 const express = require('express');
 
-// const passport = require('passport');
-// const { Strategy: LocalStrategy } = require('passport-local');
+const passport = require('passport');
+const { Strategy: LocalStrategy } = require('passport-local');
 
 const User = require('../user-schema.js');
 const router = express.Router();
