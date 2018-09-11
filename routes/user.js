@@ -1,9 +1,11 @@
+'use strict';
+
 const express = require('express');
 
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 
-const User = require('../user-schema.js');
+const User = require('../mongo_schema/user-schema.js');
 const router = express.Router();
 router.use(express.json());
 
