@@ -16,9 +16,9 @@ router.use(passport.authenticate('jwt', {session: false, failWithError: true}));
 
 router.get('/', (req, res, next) => {
   
-  Question.findOne()
-    .then(question => res.json(question));
-  //const user = req.username;
+  Question.find()
+    .then(questionArray => res.json(questionArray))
+    .catch(err => next(err));
 });
 
 module.exports = router;
