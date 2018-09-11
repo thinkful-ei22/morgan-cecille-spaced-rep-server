@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const User = require('./mongo_schema/user-schema.js');
 const userRouter = require('./routes/user.js');
+const questionsRouter = require('./routes/questions.js');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 mongoose.Promise = global.Promise;
 
@@ -28,6 +29,7 @@ app.use(
 
 app.use('/api', userRouter);
 app.use('/api', authRouter);
+app.use('/api/questions', questionsRouter);
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
