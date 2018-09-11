@@ -1,6 +1,8 @@
+'use strict';
+
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('./user-schema.js');
+const User = require('./mongo_schema/user-schema.js');
 const { Strategy: LocalStrategy } = require('passport-local');
 
 const localStrategy = new LocalStrategy((username, password, done) => {
