@@ -1,24 +1,26 @@
+'use strict';
+
 const express = require('express');
 
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 
-const User = require('../user-schema.js');
+const User = require('../mongo_schema/user-schema.js');
 const router = express.Router();
 router.use(express.json());
 
-router.get('/:id', (req, res, next) => {
-  const { id } = req.params;
+// router.get('/:id', (req, res, next) => {
+//   const { id } = req.params;
 
-  User
-    .findById(id)
-    .then(result => {
-      res.json(result)
-    })
-    .catch(err => {
-      next(err)
-    })
-})
+//   User
+//     .findById(id)
+//     .then(result => {
+//       res.json(result);
+//     })
+//     .catch(err => {
+//       next(err);
+//     });
+// });
 
 router.post('/', (req, res) => {
   const username = req.body.username;
@@ -97,34 +99,34 @@ router.post('/', (req, res) => {
     });
   }
   return User
-      .find({username})
-      .count()
-      .then(count => {
-        if (count > 0) {
-          return Promise.reject({
-            code: 422,
-            reason: 'ValidationError',
-            message: 'Username already taken',
-            location: 'username'
-          });
-        }
-        return User.hashPassword(password);
-      })
-      .then(digest => {
-        return User.create({
-          username,
-          password: digest
+    .find({username})
+    .count()
+    .then(count => {
+      if (count > 0) {
+        return Promise.reject({
+          code: 422,
+          reason: 'ValidationError',
+          message: 'Username already taken',
+          location: 'username'
         });
-      })
-      .then(user => {
-        return res.status(201).location(`${req.originalUrl}`).json(user.serialize());
-      })
-      .catch(err => {
-        if (err.reason === 'ValidationError') {
-          return res.status(err.code).json(err);
-        }
-        res.status(500).json({code: 500, message: 'Internal server error'});
+      }
+      return User.hashPassword(password);
+    })
+    .then(digest => {
+      return User.create({
+        username,
+        password: digest
       });
-  });
+    })
+    .then(user => {
+      return res.status(201).location(`${req.originalUrl}`).json(user.serialize());
+    })
+    .catch(err => {
+      if (err.reason === 'ValidationError') {
+        return res.status(err.code).json(err);
+      }
+      res.status(500).json({code: 500, message: 'Internal server error'});
+    });
+});
 
 module.exports = router;
