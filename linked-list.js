@@ -1,30 +1,24 @@
 'use strict';
 
-//Output
-// [{"id": 1111, "url": "http:foo.com", "country": "mexico"}, {...}, {...}]
-
-//Output for question levels
-// [1, 2, 4]
-
-const questions = [
-  {
-    id: 1111,
-    url: 'foo.com',
-    country: 'mexico'
-  },
-  {
-    id: 2222,
-    url: 'baz.com',
-    country: 'america'
-  },
-  {
-    id: 3333,
-    url: 'bar.com',
-    country: 'finland'
-  }
-]
-
-const questionLevels = [1, 1, 2];
+// const questions = [
+//   {
+//     id: 1111,
+//     url: 'foo.com',
+//     country: 'mexico'
+//   },
+//   {
+//     id: 2222,
+//     url: 'baz.com',
+//     country: 'america'
+//   },
+//   {
+//     id: 3333,
+//     url: 'bar.com',
+//     country: 'finland'
+//   }
+// ]
+//
+// const questionLevels = [1, 1, 2];
 
 const generateNewQuestions = function(startIndex = 0) {
   let newArray = [];
@@ -48,43 +42,19 @@ const generateNewQuestions = function(startIndex = 0) {
   return newArray;
 }
 
-handleAnswer(questionId, isCorrect){
-  const questionIndex = this.props.questions.findIndex((value) => {
-    return value._id === questionId;
-  });
+//User POST request - looks at database - look at QuestionId -
+const handleAnswer = function(questionId, isCorrect) {
+  const questionIndex = questions.findIndex((value) => {
+    return value.id === questionId;
+  })
 
-  if(isCorrect === true){
-    const newLevels = [...this.props.questionLevels];
-    if(newLevels[questionIndex] < 5){
-      newLevels[questionIndex]++;
+  if(isCorrect) {
+    //if correct - go to question levels and increment by 1
+    questionLevels[questionIndex]++
+  } else {
+    if(questionLevels[questionIndex] > 0) {
+      questionLevels[questionIndex]--
     }
-    //change this - no longer in front end
-    this.props.dispatch(changeQuestionLevels(newLevels));
-    this.addQuestion();
-    let newList = new LinkedList();
-    newList = this.state.currentList;
-    //change this - no longer using ll class
-    newList.removeFirst();
-    //change this - no longer in front end
-    this.setState({currentList: newList});
-    if(this.state.currentList.head === null){
-      this.generateNewQuestions(questionIndex + 1);
-    }
-  } else if (isCorrect === false) {
-    //change this
-    const newLevels = [...this.props.questionLevels];
-    newLevels[questionIndex] = 1;
-    let secondLowestValue = 6;
-    let secondLowestIndex = 0;
-    for(let i = 0; i < newLevels.length; i++){
-      if(i !== questionIndex && newLevels[i] < secondLowestValue){
-        secondLowestIndex = i;
-        secondLowestValue = newLevels[i];
-      }
-    }
-    newLevels[secondLowestIndex] = 1;
-    //change this...
-    this.props.dispatch(changeQuestionLevels(newLevels));
-    this.generateNewQuestions(questionIndex + 1);
   }
+  return questionLevels;
 }
