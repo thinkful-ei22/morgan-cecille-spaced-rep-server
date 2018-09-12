@@ -99,36 +99,9 @@ const generateNewQuestions = function(startIndex = 0) {
       newArray.push(questions[questionIndex])
     }
   }
-  console.log(newArray);
+  return newArray;
 }
 
-generateNewQuestions();
-//
-// generateNewQuestions(startIndex = 0){
-//   let questionList = new LinkedList();
-//
-//   //check for lowest level
-//   let lowestLevel = 5;
-//   for(let i = 0; i < this.props.questionLevels.length; i++){
-//     if(this.props.questionLevels[i] !== '' && this.props.questionLevels[i] < lowestLevel){
-//       lowestLevel = this.props.questionLevels[i];
-//     }
-//   }
-//
-//   //for all questions at the lowest level, insert them into question list
-//   for(let i = startIndex; i < this.props.questionLevels.length + startIndex; i++){
-//     const questionIndex = i % this.props.questions.length;
-//     if(this.props.questionLevels[questionIndex] === lowestLevel){
-//       //change this
-//       questionList.insertLast(this.props.questions[questionIndex]);
-//     }
-//   }
-//
-//   //update the state with the question list
-//   //change this - no longer in front end
-//   this.setState({currentList: questionList});
-// }
-//
 // addQuestion(){
 //   //add new question if all levels are above 1
 //   const addNewQuestion = !this.props.questionLevels.find(val => typeof val === 'number' && val < 2); //Is there NOT a question level that is less than 2?
