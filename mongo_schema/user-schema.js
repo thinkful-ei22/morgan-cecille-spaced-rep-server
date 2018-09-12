@@ -6,13 +6,14 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  questionsLevels: {type: Array, default: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]},
+  filteredList: {type: Array, default: []}
 });
 
 userSchema.methods.serialize = function () {
   return {
     id: this._id,
-    username: this.username,
-    password: this.password
+    username: this.username
   };
 };
 
