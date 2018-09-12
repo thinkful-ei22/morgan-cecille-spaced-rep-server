@@ -14,7 +14,7 @@ router.use(express.json());
 router.use(passport.authenticate('jwt', {session: false, failWithError: true}));
 
 router.get('/', (req, res, next) => {
-  const username = req.user.username
+  const username = req.user.username;
   User.find({username})
     .then(questionUrl => res.json(questionUrl[0].filteredList[0].url))
     .catch(err => next(err));
