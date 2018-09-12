@@ -18,6 +18,19 @@
 //   }
 // ]
 //
+// const filteredQuestions = [
+//   {
+//     id: 1111,
+//     url: 'foo.com',
+//     country: 'mexico'
+//   },
+//   {
+//     id: 2222,
+//     url: 'baz.com',
+//     country: 'america'
+//   },
+// ]
+//
 // const questionLevels = [1, 1, 2];
 
 const generateNewQuestions = function(startIndex = 0) {
@@ -51,10 +64,15 @@ const handleAnswer = function(questionId, isCorrect) {
   if(isCorrect) {
     //if correct - go to question levels and increment by 1
     questionLevels[questionIndex]++
+    //if correct - remove from list
   } else {
     if(questionLevels[questionIndex] > 0) {
       questionLevels[questionIndex]--
     }
   }
-  return questionLevels;
+
+  filteredQuestions.shift();
+  return filteredQuestions;
 }
+
+handleAnswer();
