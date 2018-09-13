@@ -56,23 +56,24 @@ const generateNewQuestions = function(questions, questionLevels, startIndex = 0)
 };
 
 //User POST request - looks at database - look at QuestionId -
-const handleAnswer = function(questions, userData, questionId, isCorrect) {
-  const questionIndex = questions.findIndex((value) => {
-    return value.id === questionId;
+const handleAnswer = function(questions, userData, isCorrect) {
+  const questionIndex = questions.findIndex( country => {
+    return country._id.toString() === userData.filteredList[0]._id.toString();
   });
 
   if(isCorrect) {
     //if correct - go to question levels and increment by 1
-    userData.questionLevels[questionIndex]++;
-    //if correct - remove from list
+    if(userData.questionLevels[questionIndex] < 5) {
+      userData.questionLevels[questionIndex]++;
+    }
   } else {
     if(userData.questionLevels[questionIndex] > 0) {
       userData.questionLevels[questionIndex]--;
     }
   }
 
-  userData.filteredQuestions.shift();
-  return userData.filteredQuestions;
+  userData.filteredList.shift();
+  return userData;
 };
 
 // handleAnswer();
