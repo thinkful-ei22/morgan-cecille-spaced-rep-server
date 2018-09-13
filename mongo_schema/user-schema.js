@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  questionLevels: {type: Array, default: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]},
+  questionLevels: [{country: String, level: {type: Number, default: 1}}],
   filteredList: {type: Array, default: []}
 });
 
