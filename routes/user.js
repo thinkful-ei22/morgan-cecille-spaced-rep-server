@@ -23,7 +23,16 @@ router.use(express.json());
 //     });
 // });
 
-router.post('/', (req, res) => {
+router.get('/users', passport.authenticate('jwt', {session: false, failWithError: true}), (req, res) => {
+  const username = req.user.username;
+
+  User.find({username})
+  .then(userData => {
+    return res.json(userData[0].questionLevels)
+  })
+})
+
+router.post('/users', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
