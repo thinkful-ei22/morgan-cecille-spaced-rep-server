@@ -22,9 +22,18 @@ router.get('/', (req, res, next) => {
   const username = req.user.username;
   User.find({username})
     .then(userData => {
+      let level;
+      for(let i = 0; i < userData[0].questionLevels.length; i++) {
+        if(userData[0].questionLevels[i].country === userData[0].filteredList[0].country) {
+          level = userData[0].questionLevels[i].level;
+        }
+      }
       //If the user's question list is not empty, send back the first quesetion
       if(userData[0].filteredList.length > 0){
-        res.json(userData[0].filteredList[0].url);
+        res.json({
+          url: userData[0].filteredList[0].url,
+          level: level
+        });
       }
       //If the user's question list IS empty, we need to regenerate questions before sending back the first question
       else {
@@ -35,7 +44,10 @@ router.get('/', (req, res, next) => {
             {filteredList: newQuestionList},
             {new: true}
           ).then(newUserData => {
-            res.json(newUserData.filteredList[0].url);
+            res.json({
+              url: newUserData.filteredList[0].url,
+              level: level
+            });
           });
         });
       }
