@@ -22,12 +22,15 @@ router.get('/', (req, res, next) => {
   const username = req.user.username;
   User.find({username})
     .then(userData => {
-      let level;
-      for(let i = 0; i < userData[0].questionLevels.length; i++) {
-        if(userData[0].questionLevels[i].country === userData[0].filteredList[0].country) {
-          level = userData[0].questionLevels[i].level;
+      let level = 1;
+      if(userData[0].filteredList.length > 0){
+        for(let i = 0; i < userData[0].questionLevels.length; i++) {
+          if(userData[0].questionLevels[i].country === userData[0].filteredList[0].country) {
+            level = userData[0].questionLevels[i].level;
+          }
         }
       }
+
       //If the user's question list is not empty, send back the first quesetion
       if(userData[0].filteredList.length > 0){
         res.json({
