@@ -25,14 +25,14 @@ router.get('/', (req, res, next) => {
       //If the user's question list is not empty, send back the first quesetion
       if(userData[0].filteredList.length > 0){
         res.json(userData[0].filteredList[0].url);
-      } 
+      }
       //If the user's question list IS empty, we need to regenerate questions before sending back the first question
       else {
         return Question.find().then(allQuestions => {
           const newQuestionList = generateNewQuestions(allQuestions, userData[0].questionLevels);
           return User.findOneAndUpdate(
-            {username}, 
-            {filteredList: newQuestionList}, 
+            {username},
+            {filteredList: newQuestionList},
             {new: true}
           ).then(newUserData => {
             res.json(newUserData.filteredList[0].url);
