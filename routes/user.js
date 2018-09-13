@@ -6,6 +6,7 @@ const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 
 const User = require('../mongo_schema/user-schema.js');
+const Question = require('../mongo_schema/question-data-schema');
 const router = express.Router();
 router.use(express.json());
 
@@ -22,7 +23,16 @@ router.use(express.json());
 //     });
 // });
 
-router.post('/', (req, res) => {
+router.get('/users', passport.authenticate('jwt', {session: false, failWithError: true}), (req, res) => {
+  const username = req.user.username;
+
+  User.find({username})
+  .then(userData => {
+    return res.json(userData[0].questionLevels)
+  })
+})
+
+router.post('/users', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
@@ -110,12 +120,20 @@ router.post('/', (req, res) => {
           location: 'username'
         });
       }
-      return User.hashPassword(password);
+      return Promise.all([
+        User.hashPassword(password),
+        Question.find()
+      ]);
     })
-    .then(digest => {
+    .then( ([digest, allQuestions]) => {
+      const countries = allQuestions.map(question => {
+        return {country: question.country};
+      });
+
       return User.create({
         username,
-        password: digest
+        password: digest,
+        questionLevels: countries
       });
     })
     .then(user => {
