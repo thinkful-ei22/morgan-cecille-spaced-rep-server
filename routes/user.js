@@ -47,7 +47,7 @@ router.put('/users', passport.authenticate('jwt', {session: false, failWithError
       return User.findOneAndUpdate({username}, { questionLevels: modifiedLevels }, { new: true });
     })
     .then((updatedUser) => {
-      res.json(updatedUser)
+      res.json(updatedUser.questionLevels)
     })
     .catch(err => next(err))
 })
