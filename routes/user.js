@@ -32,6 +32,26 @@ router.get('/users', passport.authenticate('jwt', {session: false, failWithError
   })
 })
 
+router.put('/users', passport.authenticate('jwt', {session: false, failWithError: true}), (req, res, next) => {
+  const username = req.user.username;
+
+  User.findOne({username})
+    .then(userData => {
+      for(let i = 0; i < userData.questionLevels.length; i++) {
+        if(userData.questionLevels[i].level !== 1) {
+          userData.questionLevels[i].level = 1;
+        }
+      }
+      const modifiedLevels = userData.questionLevels;
+      console.log(modifiedLevels);
+      return User.findOneAndUpdate({username}, { questionLevels: modifiedLevels }, { new: true });
+    })
+    .then((updatedUser) => {
+      res.json(updatedUser)
+    })
+    .catch(err => next(err))
+})
+
 router.post('/users', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
