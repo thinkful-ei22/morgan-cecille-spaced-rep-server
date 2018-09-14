@@ -61,6 +61,7 @@ function runServer(port = PORT) {
   const server = app
     .listen(port, () => {
       console.info(`App listening on port ${server.address().port}`);
+      // console.log('APP listening on port 8080');
     })
     .on('error', err => {
       console.error('Express failed to start');
