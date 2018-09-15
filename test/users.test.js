@@ -30,7 +30,7 @@ describe('/LOGIN ENDPOINT', function(){
     // this.timeout(30000);
     return Promise.all([
       Question.insertMany(seedQuestions),
-      User.create({username: 'billybob', password: 'password'})
+      User.create({username: 'nOtAreALUseR', password: 'password'})
     ])
       .then( function([questionRes, userRes]){
         webToken = jwt.sign(
@@ -68,8 +68,48 @@ describe('/LOGIN ENDPOINT', function(){
 
           //makes sure the token is valid
           const decodedToken = jwt.verify(loginRes.body.authToken, JWT_SECRET);
-          expect(decodedToken.user.username).to.deep.equal(newUser.username);
+          expect(decodedToken.user.username).to.equal(newUser.username);
         });
     });
+
   });
+
+
+  describe('POST to /api/users', function(){
+    const newUser = {username: 'newUser', password: 'baseball'};
+
+    it('should register a user when valid username and password are provided', function(){
+      return chai.request(app).post('/api/users').send(newUser)
+        .then(function(apiRes){
+          expect(apiRes.ok).to.equal(true);
+          expect(apiRes.body).to.have.keys('id', 'username');
+          expect(apiRes).to.be.json;
+          return User.findOne({username: newUser.username});
+        })
+        .then(function(databaseRes){
+          expect(databaseRes).to.not.be.null;
+          expect(databaseRes.username).to.equal(newUser.username);
+          expect(databaseRes.password).to.not.equal(newUser.password); //should be hashed
+          expect(databaseRes.questionLevels).to.exist;
+          databaseRes.questionLevels.forEach(question => expect(question.level).to.equal(1));
+          expect(databaseRes.filteredList).to.exist;
+          expect(databaseRes.filteredList.length).to.equal(0);
+        });
+    });
+
+  });
+
+
+  // describe('PUT to /api/users', function(){
+  //   it.only('should update all the users questionLevels back to 1', function(){
+  //     console.log(webToken);
+  //     return chai.request(app).put('/api/users').send()
+  //       .set('Authorization', `Bearer ${webToken}`)
+  //       .set('content-type', 'application/json')
+  //       .then(function(apiRes){
+  //         console.log(apiRes.body);
+  //       });
+  //   });
+
+  // });
 });
