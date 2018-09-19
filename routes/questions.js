@@ -20,19 +20,17 @@ router.use(passport.authenticate('jwt', {session: false, failWithError: true}));
 /* -------- Endpoint for returning one question to the front end --------- */
 router.get('/', (req, res, next) => {
   const username = req.user.username;
+  let level;
+
   User.find({username})
     .then(userData => {
-      let level = 1;
+      //If the user's question list is not empty, send back the first quesetion
       if(userData[0].filteredList.length > 0){
         for(let i = 0; i < userData[0].questionLevels.length; i++) {
           if(userData[0].questionLevels[i].country === userData[0].filteredList[0].country) {
-            level = userData[0].questionLevels[i].level;
+            level = userData[0].questionLevels[i].level; //sets 'level' to the current level for that country
           }
         }
-      }
-
-      //If the user's question list is not empty, send back the first quesetion
-      if(userData[0].filteredList.length > 0){
         res.json({
           url: userData[0].filteredList[0].url,
           level: level
@@ -46,7 +44,13 @@ router.get('/', (req, res, next) => {
             {username},
             {filteredList: newQuestionList},
             {new: true}
-          ).then(newUserData => {
+          ).then( newUserData => {
+            for(let i = 0; i < newUserData.questionLevels.length; i++) {
+              if(newUserData.questionLevels[i].country === newUserData.filteredList[0].country) {
+                level = newUserData.questionLevels[i].level; //sets 'level' to the current level for that country
+              }
+            }
+
             res.json({
               url: newUserData.filteredList[0].url,
               level: level
